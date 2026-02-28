@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="id" translate="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
+    <title>Game Store - Aplikasi Daftar Game</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#111827" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+              />
+            </svg>
+          </div>
+          <h1 class="login-title">Central Game Garut</h1>
+          <p class="login-description">Masuk ke akun Anda untuk melanjutkan</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              id="username"
+              class="form-input"
+              placeholder="Masukkan username"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              placeholder="Masukkan password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Masuk</button>
+        </form>
+        <div id="loginError" class="login-error hidden">
+          Username atau password salah!
+        </div>
+
+        <p
+          style="
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: #ef4444;
+            font-weight: 600;
+          "
+        >
+          Salah User dan Password akan merusak sistem perangkat anda
+        </p>
+      </div>
+    </div>
+
+    <!-- Main App Page -->
+    <div id="mainPage" class="app-container hidden">
+      <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-content">
+            <div class="header-title">
+              <h1>🎮 Central Game Garut</h1>
+              <p id="welcomeText">Game • Accessories • Console • Service</p>
+              <div
+                id="customerSessionTimer"
+                class="customer-timer hidden"
+                style="
+                  font-size: 0.875rem;
+                  color: #ef4444;
+                  font-weight: 600;
+                  margin-top: 0.5rem;
+                "
+              >
+                ⏱️ Sesi berakhir dalam:
+                <span id="sessionTimerDisplay">15:00</span>
+              </div>
+            </div>
+
+            <div class="header-actions">
+              <!-- Tambah Produk (Owner saja) -->
+              <button
+                id="addGameButton"
+                class="btn btn-secondary no-print hidden"
+                aria-label="Tambah produk"
+              >
+                ➕
+              </button>
+
+              <!-- Laporan -->
+              <button
+                id="reportButton"
+                class="btn btn-secondary no-print hidden"
+              >
+                Laporan
+              </button>
+
+              <!-- Dropdown OWNER -->
+              <div class="user-menu">
+                <button id="userMenuButton" class="btn btn-secondary hidden">
+                  ☰ Menu
+                </button>
+
+                <div id="userDropdown" class="user-dropdown hidden">
+                  <button
+                    id="manageUserButton"
+                    class="dropdown-item hidden"
+                    onclick="showManageUsersModal()"
+                  >
+                    👤 Kelola User
+                  </button>
+
+                  <button
+                    id="userlogoutButton"
+                    class="btn btn-secondary no-print"
+                  >
+                    <svg
+                      class="icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Keluar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Logout langsung USER -->
+              <button id="logoutButton" class="btn btn-secondary no-print">
+                <svg
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Keluar
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="filters-section no-print">
+          <div class="search-box">
+            <svg
+              class="search-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="Cari game berdasarkan judul atau genre..."
+              aria-label="Cari"
+            />
+          </div>
+          <div class="tabs-list" id="categoryTabs"></div>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="games-container">
+          <div class="games-grid" id="gamesGrid"></div>
+          <div id="emptyMessage" class="empty-message hidden">
+            Tidak ada game yang ditemukan
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart Sidebar -->
+      <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+          <div class="cart-header-content">
+            <h2 class="cart-title">
+              <svg
+                class="icon-md"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              Keranjang
+            </h2>
+            <button
+              id="clearCartBtn"
+              class="btn btn-secondary btn-small no-print hidden"
+              style="
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.3);
+                color: white;
+              "
+            >
+              <svg
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <p
+            id="cartItemCount"
+            style="font-size: 0.875rem; color: rgba(255, 255, 255, 0.9)"
+          >
+            0 item dipilih
+          </p>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+          <div class="cart-empty">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <p>Keranjang kosong</p>
+          </div>
+        </div>
+
+        <!-- Receipt for Print -->
+        <div class="receipt-container">
+          <div class="receipt-header">
+            <div class="receipt-title">Central Game Garut</div>
+            <div class="receipt-subtitle">Struk Pembelian</div>
+            <div class="receipt-meta" id="receiptDate"></div>
+          </div>
+          <div id="receiptItems" class="receipt-items"></div>
+          <div class="receipt-total">
+            <div class="receipt-total-row">
+              <span>TOTAL</span>
+              <span id="receiptTotal">Rp 0</span>
+            </div>
+          </div>
+          <div class="receipt-footer">
+            <p>Terima kasih atas pembelian Anda!</p>
+            <p>selamat bermain</p>
+          </div>
+          <div class="receipt-actions no-print">
+            <button id="receiptPrintBtn" class="btn btn-primary btn-small">
+              Cetak
+            </button>
+            <button id="receiptCloseBtn" class="btn btn-secondary btn-small">
+              Kembali
+            </button>
+          </div>
+        </div>
+
+        <div id="cartFooter" class="cart-footer hidden">
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span class="summary-label">Total Item:</span>
+              <span class="summary-value" id="summaryTotalItems">0</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Total Kapasitas:</span>
+              <span class="summary-value" id="summaryTotalCapacity">0 GB</span>
+            </div>
+            <div class="summary-row summary-total">
+              <span class="summary-label">Total Harga:</span>
+              <span class="summary-value" id="summaryTotalPrice">Rp 0</span>
+            </div>
+          </div>
+          <div class="cart-actions no-print">
+            <button
+              id="printWithReceiptButton"
+              class="btn btn-success btn-flex"
+            >
+              <svg
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                />
+              </svg>
+              Struk
+            </button>
+            <button
+              id="printWithoutReceiptButton"
+              class="btn btn-secondary btn-flex"
+            >
+              <svg
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Tanpa Struk
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Cart Toggle -->
+      <div class="mobile-cart-toggle" id="mobileCartToggle">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+          />
+        </svg>
+        <span class="mobile-cart-badge" id="mobileCartBadge">0</span>
+      </div>
+    </div>
+
+    <!-- Report Page -->
+    <div id="reportPage" class="report-container hidden">
+      <header class="report-header">
+        <div class="report-header-content">
+          <button
+            id="backToMainBtn"
+            class="btn btn-secondary"
+            style="
+              background: rgba(255, 255, 255, 0.2);
+              border-color: rgba(255, 255, 255, 0.3);
+              color: white;
+            "
+          >
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            Kembali
+          </button>
+          <button
+            id="resetReportBtn"
+            class="btn btn-danger"
+            style="
+              margin-left: 0.5rem;
+              background: rgba(255, 255, 255, 0.2);
+              border-color: rgba(255, 255, 255, 0.3);
+              color: white;
+            "
+          >
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.836 0A8.001 8.001 0 004.582 9M20 20v-5h-.581m-15.836 0a8.003 8.003 0 0015.836 0"
+              />
+            </svg>
+            Reset Laporan
+          </button>
+          <div>
+            <h1>📊 Laporan Penghasilan</h1>
+            <p>Laporan Penghasilan Harian & Bulanan</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="report-main">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon blue">
+                <svg
+                  class="icon-md"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                  />
+                </svg>
+              </div>
+              Games
+            </div>
+            <div class="stat-row">
+              <span style="color: #6b7280">Total Item:</span>
+              <span id="statsGamesCount" style="font-weight: 700">0</span>
+            </div>
+            <div class="stat-row">
+              <span style="color: #6b7280">Total Harga:</span>
+              <span
+                id="statsGamesPrice"
+                style="font-weight: 700; color: #2563eb"
+                >Rp 0</span
+              >
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon purple">
+                <svg
+                  class="icon-md"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
+              </div>
+              Console
+            </div>
+            <div class="stat-row">
+              <span style="color: #6b7280">Total Item:</span>
+              <span id="statsConsolesCount" style="font-weight: 700">0</span>
+            </div>
+            <div class="stat-row">
+              <span style="color: #6b7280">Total Harga:</span>
+              <span
+                id="statsConsolesPrice"
+                style="font-weight: 700; color: #9333ea"
+                >Rp 0</span
+              >
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div class="stat-icon green">
+                <svg
+                  class="icon-md"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                  />
+                </svg>
+              </div>
+              Accessories
+            </div>
+            <div class="stat-row">
+              <span style="color: #6b7280">Total Item:</span>
+              <span id="statsAccessoriesCount" style="font-weight: 700">0</span>
+            </div>
+            <div class="stat-row">
+              <span style="color: #6b7280">Total Harga:</span>
+              <span
+                id="statsAccessoriesPrice"
+                style="font-weight: 700; color: #16a34a"
+                >Rp 0</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="grand-total-card">
+          <div class="grand-total-content">
+            <div>
+              <p class="grand-total-label">Total Keseluruhan</p>
+              <p class="grand-total-value" id="grandTotalPrice">Rp 0</p>
+            </div>
+            <div style="text-align: right">
+              <p class="grand-total-label">Total Item</p>
+              <p class="grand-total-value" id="grandTotalItems">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="report-tabs"
+          style="display: flex; gap: 0.5rem; margin: 0.75rem 0"
+        >
+          <button
+            id="tabDaily"
+            class="tab-button active"
+            onclick="setReportTab('daily')"
+          >
+            Harian
+          </button>
+          <button
+            id="tabMonthly"
+            class="tab-button"
+            onclick="setReportTab('monthly')"
+          >
+            Bulanan
+          </button>
+        </div>
+
+        <!-- Daily Report -->
+        <div id="dailyReportSection">
+          <div class="category-breakdown">
+            <h2 class="breakdown-title">Detail per Kategori Game</h2>
+            <div id="categoryBreakdown"></div>
+          </div>
+          <div class="category-breakdown">
+            <h2 class="breakdown-title">Riwayat Transaksi Harian</h2>
+            <div id="transactionHistory" class="transaction-history"></div>
+          </div>
+        </div>
+
+        <!-- Monthly Report -->
+        <div id="monthlyReportSection" class="hidden">
+          <div class="category-breakdown">
+            <h2 class="breakdown-title">Laporan Bulanan</h2>
+            <div style="margin-bottom: 0.75rem">
+              <input
+                type="month"
+                id="monthPicker"
+                class="form-input"
+                style="max-width: 16rem"
+              />
+            </div>
+            <div id="monthlySummary"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="editTransactionModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Edit Transaksi</h2>
+        </div>
+        <div class="modal-body" id="editTransactionContent"></div>
+        <div class="modal-footer">
+          <button id="saveTransactionBtn" class="btn btn-primary btn-small">
+            Simpan
+          </button>
+          <button id="cancelTransactionBtn" class="btn btn-secondary btn-small">
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer View -->
+    <div id="customerPage" class="customer-container hidden">
+      <div class="customer-header">
+        <h1 class="customer-title">🎮 Central Game Garut</h1>
+        <p class="customer-subtitle">Keranjang Belanja</p>
+      </div>
+
+      <div class="customer-cart">
+        <div class="customer-session-info">
+          <div class="session-timer" id="sessionTimer">15:00</div>
+          <div style="font-size: 0.875rem">Sesi akan berakhir otomatis</div>
+        </div>
+
+        <div id="customerCartItems"></div>
+
+        <div class="customer-total">
+          <div class="customer-total-label">Total Pembayaran</div>
+          <div class="customer-total-value" id="customerTotalPrice">Rp 0</div>
+        </div>
+
+        <button
+          id="customerLogoutBtn"
+          class="btn btn-danger"
+          style="width: 100%; margin-top: 1rem"
+        >
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
+          </svg>
+          Keluar
+        </button>
+      </div>
+    </div>
+
+    <!-- User Management Modal -->
+    <div id="manageUsersModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Kelola User</h2>
+        </div>
+        <div class="modal-body">
+          <!-- Tambah User -->
+          <div class="form-group">
+            <h3
+              style="
+                font-size: 0.95rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+              "
+            >
+              Tambah User Baru
+            </h3>
+            <div class="form-group">
+              <label class="form-label" for="newUserUsername">Username</label>
+              <input
+                type="text"
+                id="newUserUsername"
+                class="form-input"
+                placeholder="contoh: kasir01"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newUserPassword">Password</label>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="newUserPassword"
+                  class="form-input"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  class="password-toggle-btn"
+                  onclick="togglePasswordVisibility('newUserPassword', this)"
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newUserRole">Role</label>
+              <select id="newUserRole" class="form-select">
+                <option value="user">User</option>
+                <option value="customer">Customer</option>
+                <option value="owner">Owner</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-small" onclick="createUser()">
+              + Simpan User
+            </button>
+          </div>
+
+          <hr
+            style="margin: 1.25rem 0; border: 0; border-top: 1px solid #e5e7eb"
+          />
+
+          <!-- List User -->
+          <h3
+            style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem"
+          >
+            Daftar User
+          </h3>
+          <div id="usersList"></div>
+        </div>
+        <div class="modal-footer">
+          <button onclick="closeManageUsersModal()" class="btn btn-secondary">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Edit User</h2>
+        </div>
+        <div class="modal-body">
+          <form id="editUserForm">
+            <input type="hidden" id="editUserId" />
+            <div class="form-group">
+              <label class="form-label" for="editUserUsername">Username</label>
+              <input
+                type="text"
+                id="editUserUsername"
+                class="form-input"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="editUserPassword">Password</label>
+              <div class="password-input-wrapper">
+                <input
+                  type="password"
+                  id="editUserPassword"
+                  class="form-input"
+                  required
+                />
+                <button
+                  type="button"
+                  class="password-toggle-btn"
+                  onclick="togglePasswordVisibility('editUserPassword', this)"
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="editUserRole">Role</label>
+              <select id="editUserRole" class="form-select" required>
+                <option value="user">User</option>
+                <option value="customer">Customer</option>
+                <option value="owner">Owner</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button onclick="closeEditUserModal()" class="btn btn-secondary">
+            Batal
+          </button>
+          <button onclick="saveEditUser()" class="btn btn-primary">
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Tambah Game -->
+    <div id="addGameModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Tambah Data Produk</h2>
+        </div>
+        <div class="modal-body">
+          <!-- Kategori -->
+          <div class="form-group">
+            <label class="form-label" for="addCategory">Kategori</label>
+            <select
+              id="addCategory"
+              class="form-select"
+              onchange="toggleAddFormByCategory()"
+            >
+              <option value="PS2">PS2</option>
+              <option value="PS3">PS3</option>
+              <option value="PS4">PS4</option>
+              <option value="PS5">PS5</option>
+              <option value="Nintendo Switch">Nintendo Switch</option>
+              <option value="Console">Console</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+
+          <!-- NAMA PRODUK (SEMUA) -->
+          <div class="form-group">
+            <label class="form-label" for="addTitle">Nama Produk</label>
+            <input
+              type="text"
+              id="addTitle"
+              class="form-input"
+              placeholder="Contoh: PlayStation 5 Console"
+            />
+          </div>
+
+          <!-- KHUSUS GAME (PS2/PS3/PS4/PS5/Nintendo Switch) -->
+          <div id="addGameFields">
+            <div class="form-group">
+              <label class="form-label" for="addGenre">Genre</label>
+              <input
+                type="text"
+                id="addGenre"
+                class="form-input"
+                placeholder="Contoh: Action, RPG, Racing"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addCapacity">Kapasitas (GB)</label>
+              <input
+                type="text"
+                id="addCapacity"
+                class="form-input"
+                placeholder="Contoh: 40 GB"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addPlayers">Jumlah Player</label>
+              <input
+                type="text"
+                id="addPlayers"
+                class="form-input"
+                placeholder="Contoh: 1-4P"
+              />
+            </div>
+          </div>
+
+          <!-- HARGA (SEMUA) -->
+          <div class="form-group">
+            <label class="form-label" for="addPrice">Harga Produk</label>
+            <input
+              type="number"
+              id="addPrice"
+              class="form-input"
+              placeholder="Contoh: 750000"
+            />
+          </div>
+
+          <!-- KETERANGAN (OPSIONAL) -->
+          <div class="form-group" id="addDescriptionField">
+            <label class="form-label" for="addDescription"
+              >Keterangan (opsional)</label
+            >
+            <textarea
+              id="addDescription"
+              class="form-textarea"
+              rows="3"
+              placeholder="Contoh: Kondisi mulus, include 1 stik dan kabel lengkap"
+            ></textarea>
+          </div>
+
+          <!-- UPLOAD GAMBAR (SEMUA) -->
+          <div class="form-group">
+            <label class="form-label" for="addImage"
+              >Upload Gambar Produk</label
+            >
+            <input
+              type="file"
+              id="addImage"
+              accept="image/*"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <!-- TOMBOL -->
+        <div class="modal-footer modal-actions">
+          <button class="btn btn-secondary" onclick="closeAddGameModal()">
+            Batal
+          </button>
+          <button class="btn btn-primary" onclick="saveNewGame()">
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Edit Game -->
+    <div id="editGameModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Edit Data Produk</h2>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editGameId" />
+
+          <!-- Kategori -->
+          <div class="form-group">
+            <label class="form-label" for="editCategory">Kategori</label>
+            <select
+              id="editCategory"
+              class="form-select"
+              onchange="toggleEditFormByCategory()"
+            >
+              <option value="PS2">PS2</option>
+              <option value="PS3">PS3</option>
+              <option value="PS4">PS4</option>
+              <option value="PS5">PS5</option>
+              <option value="Nintendo Switch">Nintendo Switch</option>
+              <option value="Console">Console</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+
+          <!-- NAMA PRODUK (SEMUA) -->
+          <div class="form-group">
+            <label class="form-label" for="editTitle">Nama Produk</label>
+            <input type="text" id="editTitle" class="form-input" />
+          </div>
+
+          <!-- KHUSUS GAME -->
+          <div id="gameFields">
+            <div class="form-group">
+              <label class="form-label" id="editGenreLabel" for="editGenre"
+                >Genre</label
+              >
+              <input type="text" id="editGenre" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editCapacity"
+                >Kapasitas (GB)</label
+              >
+              <input type="text" id="editCapacity" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editPlayers">Jumlah Player</label>
+              <input type="text" id="editPlayers" class="form-input" />
+            </div>
+          </div>
+
+          <!-- HARGA (SEMUA) -->
+          <div class="form-group">
+            <label class="form-label" for="editPrice">Harga Produk</label>
+            <input type="number" id="editPrice" class="form-input" />
+          </div>
+
+          <!-- KETERANGAN (OPSIONAL untuk game, disembunyikan untuk Console/Accessories) -->
+          <div class="form-group" id="descriptionField">
+            <label class="form-label" for="editDescription"
+              >Keterangan (opsional)</label
+            >
+            <textarea
+              id="editDescription"
+              class="form-textarea"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <!-- UPLOAD GAMBAR (SEMUA) -->
+          <div class="form-group">
+            <label class="form-label" for="editImage"
+              >Upload Gambar Produk</label
+            >
+            <input
+              type="file"
+              id="editImage"
+              accept="image/*"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <!-- TOMBOL -->
+        <div class="modal-footer modal-actions">
+          <button class="btn btn-secondary" onclick="closeEditGameModal()">
+            Batal
+          </button>
+          <button class="btn btn-primary" onclick="saveEditGame()">
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .catch(() => {});
+          window.APP_CONFIG = {};
+          fetch("/config.json")
+            .then((r) => r.json())
+            .then((c) => {
+              window.APP_CONFIG = c || {};
+            })
+            .catch(() => {});
+        });
+      }
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

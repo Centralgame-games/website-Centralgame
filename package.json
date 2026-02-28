@@ -1,0 +1,30 @@
+{
+  "name": "game-store-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static HTML/CSS/JS app with a simple local dev server",
+  "dependencies": {
+    "dotenv": "^16.6.1"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node build.js",
+    "preview-3001": "node server.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "apk:init": "npx cap init \"Central Game Garut\" com.centralgamegarut --web-dir=.",
+    "apk:add:android": "npx cap add android",
+    "apk:sync": "npx cap sync",
+    "apk:open": "npx cap open android"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "eslint": "^10.0.2",
+    "prettier": "^3.8.1"
+  }
+}
