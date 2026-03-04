@@ -342,6 +342,12 @@ let users = JSON.parse(localStorage.getItem("users")) || [
     password: "user123",
     role: "user",
   },
+  {
+    id: crypto.randomUUID(),
+    username: "customer",
+    password: "customer123",
+    role: "customer",
+  },
 ];
 
 let sessionTimer = null;
@@ -435,7 +441,7 @@ const categories = [
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
-  loadSavedData();
+  try { loadSavedData(); } catch {}
   checkAuth();
   initializeEventListeners();
   setupUserDropdown(); // ✅ pindah ke sini
@@ -444,12 +450,17 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadSavedData() {
   const savedUsers = localStorage.getItem("users");
   if (savedUsers) {
-    users = JSON.parse(savedUsers).map((u) => ({
-      id: u.id || crypto.randomUUID(),
-      username: u.username,
-      password: u.password,
-      role: u.role,
-    }));
+    try {
+      const parsedUsers = JSON.parse(savedUsers);
+      if (Array.isArray(parsedUsers)) {
+        users = parsedUsers.map((u) => ({
+          id: u.id || (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now())),
+          username: u.username,
+          password: u.password,
+          role: u.role || "user",
+        }));
+      }
+    } catch {}
   }
   const savedGames = localStorage.getItem("games");
   if (savedGames) {
@@ -531,6 +542,10 @@ function initializeEventListeners() {
   // ========= LOGIN =========
   const loginForm = document.getElementById("loginForm");
   if (loginForm) loginForm.addEventListener("submit", handleLogin);
+  // Tambahan: cegah password manager memproses form dengan trik no-op
+  if (loginForm) {
+    loginForm.setAttribute("autocomplete", "off");
+  }
 
   // ========= LOGOUT =========
   const logoutButton = document.getElementById("logoutButton");
@@ -551,6 +566,24 @@ function initializeEventListeners() {
   const qrButton = document.getElementById("qrButton");
   if (qrButton) qrButton.addEventListener("click", showQRModal);
 
+  // ========= TEXTAREA PARAGRAF (Console/Accessories) =========
+  const addDesc = document.getElementById("addDescription");
+  if (addDesc) {
+    addDesc.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        // Biarkan newline, tapi cegah bubbling agar tidak memicu handler lain
+        e.stopPropagation();
+      }
+    });
+  }
+  const editDesc = document.getElementById("editDescription");
+  if (editDesc) {
+    editDesc.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.stopPropagation();
+      }
+    });
+  }
   // ========= SEARCH =========
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
@@ -735,8 +768,8 @@ function setupUserDropdown() {
 // Login
 function handleLogin(e) {
   e.preventDefault();
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const username = (document.getElementById("username").value || "").trim();
+  const password = (document.getElementById("password").value || "").trim();
   const loginError = document.getElementById("loginError");
   if (loginError) {
     loginError.classList.add("hidden");
@@ -744,7 +777,9 @@ function handleLogin(e) {
   }
 
   const user = users.find(
-    (u) => u.username === username && u.password === password,
+    (u) =>
+      String(u.username || "").toLowerCase() === username.toLowerCase() &&
+      String(u.password || "") === password,
   );
 
   if (user) {
@@ -769,7 +804,7 @@ function handleLogin(e) {
     showMainPage();
   } else {
     if (loginError) {
-      loginError.textContent = "Username atau password salah!";
+      loginError.textContent = "Email atau password salah!";
       loginError.classList.remove("hidden");
     }
   }
@@ -799,6 +834,7 @@ function showLoginPage() {
   document.getElementById("customerPage")?.classList.add("hidden");
   sessionStorage.removeItem("view");
   location.hash = "#login";
+  document.body.classList.remove("preload");
 }
 
 // Page Navigation
@@ -815,6 +851,14 @@ function showMainPage() {
   if (currentUser && currentUser.role) {
     location.hash = `#app/${currentUser.role}`;
   }
+  document.body.classList.remove("preload");
+
+  try {
+    const savedCat = sessionStorage.getItem("selectedCategory");
+    if (savedCat && categories.includes(savedCat)) {
+      selectedCategory = savedCat;
+    }
+  } catch {}
 
   const userMenuContainer = document.querySelector(".user-menu");
   const userMenuButton = document.getElementById("userMenuButton");
@@ -900,6 +944,7 @@ function showReportPage() {
   document.getElementById("customerPage").classList.add("hidden");
   location.hash = "#report";
   renderReport();
+  document.body.classList.remove("preload");
   const mp = document.getElementById("monthPicker");
   if (mp) {
     const now = new Date();
@@ -925,6 +970,7 @@ function showCustomerPage(cartData) {
   document.getElementById("customerPage").classList.remove("hidden");
   location.hash = "#customer";
   renderCustomerCart(cartData);
+  document.body.classList.remove("preload");
 }
 
 function setReportTab(tab) {
@@ -966,6 +1012,9 @@ function renderCategoryTabs() {
 
 function selectCategory(category) {
   selectedCategory = category;
+  try {
+    sessionStorage.setItem("selectedCategory", category);
+  } catch {}
   renderCategoryTabs();
   renderGames();
 }
@@ -1050,7 +1099,7 @@ function renderGames() {
     <div class="game-title">${game.title}</div>
     ${
       isConsole && game.description
-        ? `<div class="game-description-console">${game.description}</div>`
+        ? `<div class="game-description-console preserve-lines">${game.description}</div>`
         : `<div class="game-genre">${game.genre}</div>`
     }
 
@@ -1286,13 +1335,15 @@ function toggleEditFormByCategory() {
   const descriptionField = document.getElementById("descriptionField");
 
   if (category === "Console" || category === "Accessories") {
-    // Console & Accessories: hanya Nama Produk, Keterangan (via genre), Harga, Upload Gambar
-    if (genreLabel) genreLabel.textContent = "Keterangan";
+    // Console & Accessories: gunakan textarea keterangan (paragraf), sembunyikan field genre
+    if (genreGroup) genreGroup.style.display = "none";
+    if (genreLabel) genreLabel.textContent = "Genre";
     capacityGroup.style.display = "none";
     playersGroup.style.display = "none";
-    if (descriptionField) descriptionField.style.display = "none";
+    if (descriptionField) descriptionField.style.display = "block";
   } else {
     // Game (PS2/PS3/PS4/PS5/Nintendo Switch)
+    if (genreGroup) genreGroup.style.display = "block";
     if (genreLabel) genreLabel.textContent = "Genre";
     capacityGroup.style.display = "block";
     playersGroup.style.display = "block";
@@ -1348,7 +1399,7 @@ function renderCart() {
                         <div class="cart-item-title">${item.game.title}</div>
                         ${
                           isConsoleOrAccessory && item.game.description
-                            ? `<div class="cart-item-description">${item.game.description}</div>`
+                            ? `<div class="cart-item-description preserve-lines">${item.game.description}</div>`
                             : ""
                         }
                         <div class="cart-item-details">
@@ -1482,7 +1533,7 @@ function generateReceipt() {
       if (isConsoleOrAccessory) {
         const qtyLine = `${item.quantity} x Rp ${item.game.price.toLocaleString("id-ID")}`;
         const descriptionLine = item.game.description
-          ? `<div class="r-meta">${item.game.description}</div>`
+          ? `<div class="r-meta preserve-lines">${item.game.description}</div>`
           : "";
         return `
           <div class="r-item">
@@ -1583,7 +1634,7 @@ function renderCustomerCart(cartData) {
                         <div class="customer-item-title">${item.game.title}</div>
                         ${
                           isConsoleOrAccessory && item.game.description
-                            ? `<div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem; font-style: italic;">${item.game.description}</div>`
+                            ? `<div class="preserve-lines" style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem; font-style: italic;">${item.game.description}</div>`
                             : `<div class="customer-item-details">Kapasitas: ${item.game.capacity}</div>`
                         }
                         <div class="customer-item-details">
@@ -2344,7 +2395,6 @@ window.createUser = createUser;
 window.togglePasswordVisibility = togglePasswordVisibility;
 window.closeEditTransaction = closeEditTransaction;
 window.saveEditTransaction = saveEditTransaction;
-window.setReportTab = setReportTab;
 window.setReportTab = setReportTab;
 window.openEditDayDiscount = openEditDayDiscount;
 window.resetDayOverrides = resetDayOverrides;
