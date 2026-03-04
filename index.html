@@ -5,14 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google" content="notranslate" />
     <title>Game Store - Aplikasi Daftar Game</title>
-    <link rel="manifest" href="manifest.webmanifest" />
+    <script>
+      (function () {
+        var base = document.createElement("base");
+        base.href = location.protocol === "file:" ? "./" : "/";
+        document.head.appendChild(base);
+      })();
+    </script>
     <meta name="theme-color" content="#111827" />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .hidden { display: none !important; }
+      /* Sembunyikan semua halaman sampai JS menentukan tampilan yang tepat */
+      body.preload #loginPage,
+      body.preload #mainPage,
+      body.preload #reportPage,
+      body.preload #customerPage {
+        display: none !important;
+      }
+    </style>
   </head>
 
-  <body>
+  <body class="notranslate preload">
     <!-- Login Page -->
-    <div id="loginPage" class="login-container">
+    <div id="loginPage" class="login-container hidden">
       <div class="login-card">
         <div class="login-header">
           <div class="login-icon">
@@ -34,14 +50,28 @@
           <p class="login-description">Masuk ke akun Anda untuk melanjutkan</p>
         </div>
 
-        <form id="loginForm">
+        <form
+          id="loginForm"
+          autocomplete="off"
+          novalidate
+          class="notranslate"
+          data-lpignore="true"
+          data-1p-ignore
+        >
           <div class="form-group">
             <label for="username" class="form-label">Username</label>
             <input
               type="text"
               id="username"
               class="form-input"
-              placeholder="Masukkan username"
+              placeholder="Masukkan email"
+              name="email_no_save"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              inputmode="email"
+              data-lpignore="true"
+              data-1p-ignore
               required
             />
           </div>
@@ -52,13 +82,19 @@
               id="password"
               class="form-input"
               placeholder="Masukkan password"
+              name="password_no_save"
+              autocomplete="new-password"
+              autocapitalize="off"
+              spellcheck="false"
+              data-lpignore="true"
+              data-1p-ignore
               required
             />
           </div>
           <button type="submit" class="btn btn-primary">Masuk</button>
         </form>
         <div id="loginError" class="login-error hidden">
-          Username atau password salah!
+          Email atau password salah!
         </div>
 
         <p
@@ -1040,20 +1076,39 @@
     </div>
 
     <script>
-      if ("serviceWorker" in navigator) {
+      if (location.protocol !== "file:" && "serviceWorker" in navigator) {
         window.addEventListener("load", () => {
+          // Inject manifest only on http/https to avoid file:// CORS error
+          try {
+            var m = document.createElement("link");
+            m.setAttribute("rel", "manifest");
+            m.setAttribute("href", "manifest.webmanifest");
+            document.head.appendChild(m);
+          } catch {}
           navigator.serviceWorker
-            .register("/service-worker.js")
+            .register("service-worker.js")
             .catch(() => {});
           window.APP_CONFIG = {};
-          fetch("/config.json")
-            .then((r) => r.json())
-            .then((c) => {
-              window.APP_CONFIG = c || {};
-            })
-            .catch(() => {});
+          fetch("config.json")
+            .then((r) => (r.ok ? r.json() : {}))
+            .then((c) => { window.APP_CONFIG = c || {}; })
+            .catch(() => { window.APP_CONFIG = {}; });
         });
+      } else {
+        window.APP_CONFIG = {};
       }
+    </script>
+    <script>
+      // Fallback: jika script utama gagal termuat, jangan biarkan halaman tersembunyi
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+          if (document.body.classList.contains("preload")) {
+            const lp = document.getElementById("loginPage");
+            if (lp) lp.classList.remove("hidden");
+            document.body.classList.remove("preload");
+          }
+        }, 100);
+      });
     </script>
     <script src="script.js"></script>
   </body>
