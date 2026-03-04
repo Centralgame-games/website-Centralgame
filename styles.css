@@ -406,6 +406,10 @@ body {
   position: relative;
 }
 
+.preserve-lines {
+  white-space: pre-wrap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -791,7 +795,9 @@ body {
 .game-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  background-color: #ffffff;
 }
 
 .game-image-wrapper {
@@ -842,7 +848,7 @@ body {
   overflow: hidden;
   min-height: 2.5rem;
   line-height: 1.25rem;
-  transform: translateY(-14px);
+  transform: translateY(-8px);
 }
 
 .game-players {
@@ -1654,6 +1660,10 @@ body {
 
 /* Print Styles */
 @media print {
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
   body {
     background: white;
   }
@@ -1705,6 +1715,7 @@ body {
     border: none !important;
     max-height: none !important;
     overflow: visible !important;
+    break-inside: avoid;
   }
   .receipt-header {
     border-bottom-color: #000 !important;
@@ -1756,6 +1767,30 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 
+  .game-capacity-badge {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    min-height: 18px;
+  }
+  .game-capacity-badge.price,
+  .game-capacity-badge.players,
+  .game-capacity-badge.capacity {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+  .game-players {
+    font-size: 0.7rem;
+    margin-bottom: 0.4rem;
+  }
+  .game-capacity-wrapper {
+    gap: 4px;
+  }
+  .game-price {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+
   .header-actions {
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -1804,6 +1839,12 @@ body {
   .dropdown-item {
     padding: 0.45rem 0.55rem;
     font-size: 0.75rem;
+  }
+  .game-players {
+    font-size: 0.65rem;
+  }
+  .game-price {
+    font-size: 0.8rem;
   }
 }
 
@@ -2775,4 +2816,3 @@ body {
   border: 1px solid #d1d5db;
   border-radius: 6px;
 }
-
